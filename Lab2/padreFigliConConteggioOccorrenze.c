@@ -36,8 +36,8 @@ int main(int argc, char* argv[]) {
 
     nChildren = argc - 2;
 
-    printf("Carattere da cercare: %c\n", charToCheck);
-    printf("Numero di figli: %d\n", nChildren);
+    printf("Character to count: %c\n", charToCheck);
+    printf("Number of children: %d\n", nChildren);
 
 
     for (int i = 0; i < nChildren; i++) {
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
         }
 
         if (pid == 0) {
-            printf("Figlio %d con pid %d apre file %s\n", i, getpid(), filename);
+            printf("Child %d with pid %d opened %s\n", i, getpid(), filename);
             pid = getppid();
 
             FILE *file = fopen(filename, "r");
@@ -69,13 +69,13 @@ int main(int argc, char* argv[]) {
                 }
             }
 
-            printf("Trovato nel file %s il carattere '%c' %d volte\n", filename, charToCheck, charOccurrencies);
+            printf("File %s contains char '%c' %d times\n", filename, charToCheck, charOccurrencies);
 
             return(charOccurrencies);
         }
         waitpid(pid, &status, 0);
         if (WIFEXITED(status)) {
-            printf("Il figlio %d con pid %d ha trovato nel file %s il carattere '%c' %d volte\n", i, pid, filename, charToCheck, WEXITSTATUS(status));
+            printf("Child %d with pid %d found in file %s char '%c' %d times\n", i, pid, filename, charToCheck, WEXITSTATUS(status));
         }
 
     }
