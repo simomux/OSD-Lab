@@ -8,13 +8,13 @@
 #define PERM 0644   /* UNIX */
 
 int main(int argc, char *argv[]) {
-    int pid, nchildren, nblocks, blocksize, status, ret, j, k;
+    int pid, nchildren, nblocks, status, ret, j, k;
     int bufsize = 200;
-    char *buf;
     long long expected;
     long long calculated;
     char error[bufsize];
     int fd;
+    char ch;
 
     if (argc != 3) {
         snprintf(error, bufsize, "Invalid arguments!\n");
@@ -24,37 +24,32 @@ int main(int argc, char *argv[]) {
     
     nblocks = atoi(argv[1]);
 
-    if (nblocks <= 0)
-    {
+    if (nblocks <= 0) {
         perror("Number of blocks can't be < 1");
         exit(2);
     }
 
-    buf = malloc(blocksize);
-    if (buf == NULL) {
-        perror("malloc");
-        exit(3);
-    }
-
     /* Create file */ 
-    if ((fd = creat (argv[2], PERM)) < 0 )
-    {
+    if ((fd = creat (argv[2], PERM)) < 0 ) {
         perror("creat");
-        exit(4);
+        exit(3);
     }
     
     for (j = 0; j < nchildren; j++) {
         if ((pid=fork()) < 0) {
         	perror("fork");
-		    exit(5);
+		    exit(4);
         }
 
+
+    	lseek(fd, 0L, SEEK_END);
+
         if (pid == 0) {
-            for (k = 0; k < blocksize; k++)
-                buf[k] = j;
 
             for (k = 0; k < nblocks; k++) {
-                if (write(fd, buf, blocksize) != blocksize) {
+                ch = '0' + j;
+
+                if (write(fd, &ch, 1) != 1) {
                     perror("write");
                     exit(-1);
     		    }  
@@ -79,14 +74,6 @@ int main(int argc, char *argv[]) {
             perror(error);
         }
     }
-    
-    expected =  blocksize * nblocks * nchildren;
-    snprintf(error, bufsize, "Estimated length: %10lld\n", expected);
-    perror(error);
-    calculated=lseek(fd, 0L, SEEK_END);
-    snprintf(error, bufsize, "Actual length: %10lld\n", (long long) calculated);
-    perror(error);
-
 
     return 0;
 }
