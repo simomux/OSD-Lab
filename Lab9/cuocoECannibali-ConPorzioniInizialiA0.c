@@ -27,11 +27,11 @@ void *eseguiCuoco (void* id) {
 
 
   for(i = 0; ; i++) {
-    sem_wait(&EMPTY);
+    sem_wait(EMPTY);
     printf("Chef-[Thread%d, id %lu] is filling the pot (iter. %d)\n", *pi, pthread_self(), i);
    	sleep(5);
     portions = M;
-    sem_post(&FULL);
+    sem_post(FULL);
   }
 }
 
@@ -51,8 +51,8 @@ void *eseguiCannibale(void *id) {
   pthread_mutex_lock(&MUTEX);
   
   if (portions == 0) {
-      sem_post(&EMPTY);
-      sem_wait(&FULL);
+      sem_post(EMPTY);
+      sem_wait(FULL);
   }
   
   portions--;
@@ -107,7 +107,7 @@ int main (int argc, char **argv) {
     exit(5);
   }
 
-  EMPTY = sem_open(EMPTY_SEM_NAME, O_CREAT, 0644, 1);
+  EMPTY = sem_open(EMPTY_SEM_NAME, O_CREAT, 0644, 0);
   if (EMPTY == SEM_FAILED) {
     perror("Error initializing EMPTY semaphore");
     exit(6);
@@ -137,7 +137,7 @@ int main (int argc, char **argv) {
 
   for (i=0; i < NUM_THREADS; i++) {
     int ris;
-    if (i = 0) 
+    if (i == 0) 
       printf("Can't wait for chef thread since it's an infinite loop!\n");
     else {
       pthread_join(thread[i], (void**) & p);
