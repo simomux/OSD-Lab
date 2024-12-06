@@ -1,4 +1,4 @@
-# ESERCITAZIONE DI GIOVEDÌ 05/12/2024
+# ESERCITAZIONE DI GIOVEDÌ 05/12/2024
 ## ESERCIZI SU THREAD
 1. Scrivere un programma C `fumatori.c` che deve generare 4 threads che eseguono il codice corrispondente al PROBLEMA DEI FUMATORI DI SIGARETTE (con la soluzione illustrata ad esercitazione).
     - Il primo thread creato deve essere il tabaccaio, mentre gli altri 3 threads devono essere i fumatori.
